@@ -7,26 +7,6 @@ import (
 	"os"
 )
 
-/*
-The Go language provides a number of I/O interfaces
-It is best practice to make use of these interfaces wherever possible
-rather than passing structures or other types directly
-
-type Reader interface {
-	Read(p []byte) (n int, err error)
-}
-type Writer interface {
-	Write(p []byte) (n int, err error)
-}
-type Seeker interface {
-	Seek(offset int64, whence int) (int64, error)
-}
-type ReadSeeker interface {
-	Reader
-	Seeker
-}
-*/
-
 // Copy copies the data from 'in' to 'out' using standard copy and using a buffer
 func Copy(in io.ReadSeeker, out io.Writer) error {
 	// works like tee. write to out and stdout
