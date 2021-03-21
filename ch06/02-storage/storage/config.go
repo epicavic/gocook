@@ -13,7 +13,7 @@ import (
 
 // NewMongoStorage initializes a MongoStorage
 func NewMongoStorage(ctx context.Context, dbname, dbcoll string) (*MongoStorage, error) {
-	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 60*time.Second)
 	defer cancel()
 
 	dburl := options.Client().ApplyURI("mongodb://localhost:27017")
@@ -24,7 +24,7 @@ func NewMongoStorage(ctx context.Context, dbname, dbcoll string) (*MongoStorage,
 
 	// retry database connection
 	log.Println("Trying to connect to database")
-	err = retry.Constant(ctx, 5*time.Second, func(ctx context.Context) error {
+	err = retry.Fibonacci(ctx, 1*time.Second, func(ctx context.Context) error {
 		if err := client.Ping(ctx, readpref.Primary()); err != nil {
 			// This marks the error as retryable
 			return retry.RetryableError(err)
