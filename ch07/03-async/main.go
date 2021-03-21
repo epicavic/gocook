@@ -1,0 +1,26 @@
+package main
+
+import (
+	"fmt"
+
+	"main/async"
+)
+
+func main() {
+	urls := []string{
+		"https://www.google.com",
+		"https://golang.org",
+		"https://www.github.com",
+	}
+	c := async.NewClient()
+	async.FetchAll(urls, c)
+
+	for i := 0; i < len(urls); i++ {
+		select {
+		case resp := <-c.Resp:
+			fmt.Printf("Status received for %s: %d\n", resp.Request.URL, resp.StatusCode)
+		case err := <-c.Err:
+			fmt.Printf("Error received: %s\n", err)
+		}
+	}
+}
